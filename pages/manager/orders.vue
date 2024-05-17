@@ -107,8 +107,6 @@ const items = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
 
-const id = ref('');
-
 const toggleList = [
   { id: 1, text: 'Все', isToggled: ref(false) },
   { id: 2, text: '2', isToggled: ref(false) },
@@ -144,15 +142,15 @@ const handleBlur = () => {
   const dateObject2 = new Date(endDate);
 
   const year1 = dateObject1.getFullYear();
-  const month1 = (dateObject1.getMonth() + 1).toString().padStart(2, '0');  // Месяцы нумеруются с нуля
+  const month1 = (dateObject1.getMonth() + 1).toString().padStart(2, '0');
   const day1 = dateObject1.getDate().toString().padStart(2, '0');
 
   const year2 = dateObject2.getFullYear();
-  const month2 = (dateObject2.getMonth() + 1).toString().padStart(2, '0');  // Месяцы нумеруются с нуля
+  const month2 = (dateObject2.getMonth() + 1).toString().padStart(2, '0');
   const day2 = dateObject2.getDate().toString().padStart(2, '0');
 
-  firstDate = year1 + month1 + day1;
-  secondDate = year2 + month2 + day2;
+  firstDate = `${year1}${month1}${day1}`;
+  secondDate = `${year2}${month2}${day2}`;
   handleSubmit();
 
 };
@@ -166,7 +164,6 @@ const handleSubmit = async () => {
     }
     const data = await response.json();
     items.value = data.response.data.orders;
-    console.log(items.value);
   } catch (err: any) {
     error.value = err.message;
   } finally {
@@ -185,21 +182,11 @@ const fetchData = async () => {
     }
     const data = await response.json();
     items.value = data.response.data.orders;
-    console.log(items.value);
   } catch (err: any) {
     error.value = err.message;
   } finally {
     isLoading.value = false;
   }
-};
-
-const updateIdFromUrl = () => {
-  const url = window.location.href;
-  const urlObj = new URL(url);
-  const pathname = urlObj.pathname;
-  const parts = pathname.split('/');
-  id.value = parts[parts.length - 1];
-  console.log(id.value);
 };
 
 const ShowButton = () => {
@@ -211,7 +198,6 @@ const ResetButton = () => {
 };
 
 onMounted(fetchData);
-watchEffect(updateIdFromUrl);
 
 
 </script>
