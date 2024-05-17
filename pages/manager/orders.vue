@@ -94,8 +94,9 @@ import { StatusCard } from "~/shared/ui/status-card";
 import { Empty } from "~/shared/ui/empty";
 import {Button } from "~/shared/ui/button";
 
-
 const selectedDate = ref('');
+let firstDate = '';
+let secondDate = '';
 
 const searchQuery = ref('');
 const searchType = ref('order_number');
@@ -137,13 +138,29 @@ const searchTypes = {
 };
 
 const handleBlur = () => {
-  console.log(selectedDate.value)
+  const [ startDate, endDate ] = selectedDate.value;
+
+  const dateObject1 = new Date(startDate);
+  const dateObject2 = new Date(endDate);
+
+  const year1 = dateObject1.getFullYear();
+  const month1 = (dateObject1.getMonth() + 1).toString().padStart(2, '0');  // Месяцы нумеруются с нуля
+  const day1 = dateObject1.getDate().toString().padStart(2, '0');
+
+  const year2 = dateObject2.getFullYear();
+  const month2 = (dateObject2.getMonth() + 1).toString().padStart(2, '0');  // Месяцы нумеруются с нуля
+  const day2 = dateObject2.getDate().toString().padStart(2, '0');
+
+  firstDate = year1 + month1 + day1;
+  secondDate = year2 + month2 + day2;
+  handleSubmit();
+
 };
 
 const handleSubmit = async () => {
   isLoading.value = true;
   try {
-    const response = await fetch('http://localhost:3001/lk/method/orders.getTest' + `?search_type=${searchType.value}&search_value=${searchQuery.value}&year=${selectedValue.value}`);
+    const response = await fetch('http://localhost:3001/lk/method/orders.getTest' + `?search_type=${searchType.value}&search_value=${searchQuery.value}&year=${selectedValue.value}&date_start=${firstDate}&date_finish=${secondDate}`);
     if (!response.ok) {
       throw new Error('Ошибка загрузки данных');
     }
